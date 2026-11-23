@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dry-Type Step-Up Transformer (Split-Bobbin)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>DRY-TYPE TRANSFORMER CALCULATOR (SPLIT-BOBBIN)</h1>
+
+    <h2 style="text-align:center; margin: 20px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 5px; text-transform: uppercase;">Phase 1: Capacity & Turns</h2>
+    <div class="row">
+
+        <div class="card">
+            <h3>STEP 1: Total Capacity</h3>
+            <div class="formula">VA = V_sec × I_sec</div>
+            <label>Secondary Voltage (V)</label>
+            <input type="number" step="any" id="vSecInput" placeholder="Enter Voltage" inputmode="decimal">
+            <label>Secondary Current (A)</label>
+            <input type="number" step="any" id="iSecInput" placeholder="Enter Current" inputmode="decimal">
+            <div class="calculation" id="calc1"></div>
+            
+            <div class="calc-wrapper">
+                <label>Calculated VA</label>
+                <input type="number" step="any" id="vaOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Calculated kVA</label>
+                <input type="number" step="any" id="kvaOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 2: Volts Per Turn</h3>
+            <div class="formula">V/T = K × √kVA</div>
+            <label>K Factor constant</label>
+            <input type="number" step="any" id="k" value="0.8" inputmode="decimal">
+            <label>kVA value used</label>
+            <input type="number" step="any" id="kvaInput" placeholder="Waiting for Step 1..." inputmode="decimal">
+            <div class="calculation" id="calc2"></div>
+            
+            <div style="margin-top: 15px; padding: 10px; background: #fff3e0; border: 2px solid #ff9800; border-radius: 6px;">
+                <h4 style="margin-bottom: 5px; color: #e65100; text-align: center;">Conductor Selection</h4>
+                <label style="margin-top: 5px;">Conductor Material</label>
+                <select id="conductorMaterial" style="border-color: #ff9800;">
+                    <option value="Copper">Copper</option>
+                    <option value="Aluminium">Aluminium</option>
+                </select>
+                <label>Conductor Density ρ (g/cc)</label>
+                <input type="number" step="any" id="rhoCu" value="8.89" inputmode="decimal" style="border-color: #ffb74d;">
+            </div>
+            
+            <div class="calc-wrapper">
+                <label>Volts / Turn</label>
+                <input type="number" step="any" id="vt" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 3: Primary Turns</h3>
+            <div class="formula">Turns = CEIL(V_pri / V/T)</div>
+            <label>Primary Voltage (V)</label>
+            <input type="number" step="any" id="primaryVoltage" placeholder="Enter Voltage" inputmode="decimal">
+            <label>V/T value used</label>
+            <input type="number" step="any" id="vtInput" placeholder="Waiting for Step 2..." inputmode="decimal">
+            <div class="calculation" id="calc3"></div>
+            
+            <div class="calc-wrapper">
+                <label>Primary Turns</label>
+                <input type="number" step="any" id="primaryTurns" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Actual Volts / Turn</label>
+                <input type="number" step="any" id="actualVT" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 4: Secondary Turns</h3>
+            <div class="formula">Sec Turns = CEIL(V_sec / V/T_act)</div>
+            <label>Secondary Voltage used</label>
+            <input type="number" step="any" id="secondaryVoltage" placeholder="Waiting for Step 1..." inputmode="decimal">
+            <label>Actual V/T used</label>
+            <input type="number" step="any" id="actualVTInput" placeholder="Waiting for Step 3..." inputmode="decimal">
+            <div class="calculation" id="calc4"></div>
+            
+            <div class="calc-wrapper">
+                <label>Secondary Turns</label>
+                <input type="number" step="any" id="secondaryTurns" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin: 30px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 5px; text-transform: uppercase;">Phase 2: Core Area Dimensions</h2>
+    <div class="row">
+        <div class="card">
+            <h3>STEP 5: Net Core Area</h3>
+            <div class="formula">A_net = (V/T × 10⁶) / (4.44 × B × f)</div>
+            <label>V/T baseline used</label>
+            <input type="number" step="any" id="netAreaVTInput" placeholder="Waiting for Step 2..." inputmode="decimal">
+            <label>Flux Density B (Tesla)</label>
+            <input type="number" step="any" id="fluxDensity" value="1" inputmode="decimal">
+            <label>Frequency (Hz)</label>
+            <input type="number" step="any" id="frequency" value="50" inputmode="decimal">
+            <div class="calculation" id="calc5"></div>
+            
+            <div class="calc-wrapper">
+                <label>Net Core Area (mm²)</label>
+                <input type="number" step="any" id="netAreaOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 6: Gross Core Selection</h3>
+            <div class="formula">A_gross = A_net / SF</div>
+            <label>Net Area used (mm²)</label>
+            <input type="number" step="any" id="netAreaInput" placeholder="Waiting for Step 5..." inputmode="decimal">
+            <label>Stacking Factor (SF)</label>
+            <input type="number" step="any" id="stackingFactor" value="0.9" inputmode="decimal">
+            <label>Tongue Width TW (mm)</label>
+            <input type="number" step="any" id="tongueWidth" placeholder="Enter TW" inputmode="decimal">
+            <label>Stack Height SH (mm)</label>
+            <input type="number" step="any" id="stackHeight" placeholder="Enter SH" inputmode="decimal">
+            <div class="calculation" id="calc6"></div>
+            
+            <div class="calc-wrapper">
+                <label>Gross Area Req (mm²)</label>
+                <input type="number" step="any" id="grossArea" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Selected Area (TW × SH)</label>
+                <input type="number" step="any" id="selectedArea" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin: 30px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 5px; text-transform: uppercase;">Phase 3: Primary Winding</h2>
+    <div class="row">
+
+        <div class="card">
+            <h3>STEP 7: Pri Conductor Size</h3>
+            <div class="formula">Area = I_pri / δ</div>
+            <label>VA capacity used</label>
+            <input type="number" step="any" id="vaConductorInput" placeholder="Waiting for Step 1..." inputmode="decimal">
+            <label>Primary Voltage used</label>
+            <input type="number" step="any" id="vPriConductorInput" placeholder="Waiting for Step 3..." inputmode="decimal">
+            <label>Current Density δ (A/mm²)</label>
+            <input type="number" step="any" id="delta" value="2.5" inputmode="decimal">
+            <label>Insulation Increment (mm)</label>
+            <input type="number" step="any" id="priInsAddition" value="0.1" inputmode="decimal">
+            <div class="calculation" id="calc7"></div>
+            
+            <div class="calc-wrapper">
+                <label>Primary Current (A)</label>
+                <input type="number" step="any" id="iPriOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Calculated Bare Dia (mm)</label>
+                <input type="number" step="any" id="priCalcBareDiaOutput" placeholder="Waiting..." readonly style="background:#eee;">
+            </div>
+            <div class="calc-wrapper swg-highlight-wrapper">
+                <label style="color:#d32f2f; text-align:center; font-weight: bold;">Suggested Pri Wire SWG</label>
+                <div id="priSwgSuggest" class="suggest-badge" style="margin-top: 5px;">Waiting...</div>
+            </div>
+            <div class="calc-wrapper">
+                <label>Select Winding SWG</label>
+                <select id="priSwgSelect" style="width:100%; padding: 5px; margin-top: 2px;"></select>
+            </div>
+            <div class="calc-wrapper">
+                <label>Selected Bare Dia (mm)</label>
+                <input type="number" step="any" id="priSelectedBareDia" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Selected Insulated d (mm)</label>
+                <input type="number" step="any" id="priInsDiaInput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+
+            <div id="priFlatWireSection" style="display:none; margin-top: 15px; padding: 10px; border: 1px dashed #2196f3; background:#e3f2fd; border-radius: 6px;">
+                <h4 style="margin-bottom:10px; color:#1976d2; font-size:14px;">Wire Type (Primary)</h4>
+                
+                <div class="wire-type-group">
+                    <label class="wire-type-card">
+                        <input type="radio" id="priWireTypeRound" name="priWireType" value="round" checked>
+                        <div class="wire-type-info">
+                            <span class="wire-type-title">Round Wire</span>
+                            <span class="wire-type-desc">Recommended for standard winding</span>
+                        </div>
+                    </label>
+                    <label class="wire-type-card">
+                        <input type="radio" id="priWireTypeFlat" name="priWireType" value="flat">
+                        <div class="wire-type-info">
+                            <span class="wire-type-title">Flat (Strip) Wire</span>
+                            <span class="wire-type-desc">Recommended for heavy current conductors</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="priFlatInputs" style="display:none;">
+                    <div style="font-size:12px; color:#555; margin-bottom:10px;">
+                        <strong>Suggested Strip Sizes:</strong> <span id="priStripSuggestions" style="color:#1976d2; font-weight:bold;">--</span>
+                    </div>
+                    <label>Breadth (mm)</label>
+                    <input type="number" step="any" id="priFlatBreadth" placeholder="Enter Breadth" inputmode="decimal">
+                    <label>Height (mm)</label>
+                    <input type="number" step="any" id="priFlatHeight" placeholder="Enter Height" inputmode="decimal">
+                    <label>Parallel Flat Conductors</label>
+                    <input type="number" step="1" min="1" id="priParallel" value="1" inputmode="numeric">
+                    <div class="calc-wrapper">
+                        <label>Entered Area (mm²)</label>
+                        <input type="number" step="any" id="priEnteredAreaOutput" placeholder="Waiting..." readonly style="background:#eee; margin-bottom: 5px;">
+                        <label>Effective Height (mm)</label>
+                        <input type="number" step="any" id="priEffectiveHeightOutput" placeholder="Waiting..." readonly style="background:#eee; margin-bottom: 5px;">
+                        <label>Effective Area (mm²)</label>
+                        <input type="number" step="any" id="priFlatAreaOutput" placeholder="Waiting..." readonly style="background:#eee;">
+                        <div id="priFlatWarning" style="color:#d32f2f; font-size:11px; margin-top:4px; display:none; font-weight:bold;">Warning: Effective Area differs from required!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 8: Pri Turns & Layers</h3>
+            <div class="formula">TPL = FLOOR(Bobbin / d) - Margin</div>
+            <label>Limbs Count</label>
+            <input type="number" step="any" id="limbsCount" value="2" inputmode="decimal">
+            <label>Pri Bobbin Height (mm)</label>
+            <input type="number" step="any" id="bobbinHeightPri" placeholder="Enter Height" inputmode="decimal">
+            <label>Bobbin Flange (mm)</label>
+            <input type="number" step="any" id="bobbinFlange" value="7" inputmode="decimal">
+            <label>Safety Margin (Turns)</label>
+            <input type="number" step="any" id="priSafetyMargin" value="1" inputmode="decimal">
+            <div class="calculation" id="calc8"></div>
+            
+            <div class="calc-wrapper">
+                <label>Pri Turns/Limb</label>
+                <input type="number" step="any" id="priTurnsLimbOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Pri Turns Per Layer (TPL)</label>
+                <input type="number" step="any" id="priTplOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Pri Layers</label>
+                <input type="number" step="any" id="priLayersOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 9: Pri Radial Thickness</h3>
+            <div class="formula">Rad = (d_ins × L) + (Paper)</div>
+            <label>Paper Thickness (mm)</label>
+            <input type="number" step="any" id="paperThickness" value="0.127" inputmode="decimal">
+            <label>Paper Layers Count</label>
+            <input type="number" step="any" id="priPaperLayers" value="4" inputmode="decimal">
+            <div class="calculation" id="calc9"></div>
+            
+            <div class="calc-wrapper">
+                <label>Pri Radial Thickness (mm)</label>
+                <input type="number" step="any" id="priRadialOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 10: Pri LMT & Weight</h3>
+            <div class="formula">Wt = LMT × N × Limbs × Area × ρ</div>
+            <label>Core Clearance Gap (mm)</label>
+            <input type="number" step="any" id="coilClearance" value="3.5" inputmode="decimal">
+            <div class="calculation" id="calc10"></div>
+            
+            <div class="calc-wrapper">
+                <label>Primary LMT (m)</label>
+                <input type="number" step="any" id="priLmtOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Primary Conductor Weight (kg)</label>
+                <input type="number" step="any" id="priWeightOutput" placeholder="Waiting..." inputmode="decimal" data-cost-type="winding" data-cost-name="Primary" data-cost-material-source="conductorMaterial">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin: 30px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 5px; text-transform: uppercase;">Phase 4: Hardware (Clamps & Bobbins)</h2>
+    <div class="row">
+        <div class="card">
+            <h3>STEP 11: L-Clamp Dims</h3>
+            <div class="formula">A_clamp = (2×t_bob) + (2×t_pri) + (2×Extra) + Gap</div>
+            <label>Bobbin Wall t_bobbin (mm)</label>
+            <input type="number" step="any" id="tbobbinClamp" value="3.5" inputmode="decimal">
+            <label>Extra Space Margin (mm)</label>
+            <input type="number" step="any" id="extraSpaceClamp" value="9" inputmode="decimal">
+            <label>Center Gap (mm)</label>
+            <input type="number" step="any" id="centerGapClamp" value="10" inputmode="decimal">
+            <div class="calculation" id="calc11"></div>
+            
+            <div class="calc-wrapper">
+                <label>Clamp Span A_clamp (mm)</label>
+                <input type="number" step="any" id="aClampOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Clamp Plate Length (mm)</label>
+                <input type="number" step="any" id="clampLenOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 12: L-Clamp Weight</h3>
+            <div class="formula">W_clamp = L × W × Thick × ρ</div>
+            <label>Bending Deduction (mm)</label>
+            <input type="number" step="any" id="bendingDeduction" value="10" inputmode="decimal">
+            <label>MS Sheet Thickness (mm)</label>
+            <input type="number" step="any" id="msThickness" value="3" inputmode="decimal">
+            <label>Mild Steel Density ρ (g/cc)</label>
+            <input type="number" step="any" id="rhoMS" value="7.85" inputmode="decimal">
+            <label>Clamp Quantity</label>
+            <input type="number" step="any" id="clampQty" value="4" inputmode="decimal">
+            <div class="calculation" id="calc12"></div>
+            
+            <div class="calc-wrapper">
+                <label>Clamp Plate Width (mm)</label>
+                <input type="number" step="any" id="clampWidthOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Total Clamps Wt (kg)</label>
+                <input type="number" step="any" id="totalClampWtOutput" placeholder="Waiting..." inputmode="decimal" data-cost-type="clamp" data-cost-name="Clamp">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 13: Bobbin Dimensions</h3>
+            <div class="formula">Outer_W = Inner_W + (2×Clearance)</div>
+            <label>Core Gap Tolerance (mm)</label>
+            <input type="number" step="any" id="coreGapBobbin" value="2" inputmode="decimal">
+            <label>Tape Buffer Height (mm)</label>
+            <input type="number" step="any" id="tapeBufferBobbin" value="10" inputmode="decimal">
+            <div class="calculation" id="calc13"></div>
+            
+            <div class="calc-wrapper">
+                <label>Outer Clearance (mm)</label>
+                <input type="number" step="any" id="bobbinOuterClearOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+
+            <div style="margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; text-align: center;">
+                <h4 style="margin-bottom: 10px; color: #444; font-size: 13px;">Live Dimension Blueprint</h4>
+                <svg viewBox="0 0 350 200" style="width: 100%; max-width: 350px; height: auto;">
+                    <defs>
+                        <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                            <polygon points="0 0, 6 3, 0 6" fill="#333" />
+                        </marker>
+                    </defs>
+
+                    <rect x="10" y="20" width="140" height="120" fill="#fff" stroke="#333" stroke-width="1.5"/>
+                    <rect x="35" y="45" width="90" height="70" fill="#e0e0e0" stroke="#333" stroke-width="1.5"/>
+
+                    <circle cx="22" cy="55" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                    <circle cx="22" cy="80" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                    <circle cx="22" cy="105" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                    <circle cx="138" cy="55" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                    <circle cx="138" cy="80" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                    <circle cx="138" cy="105" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+
+                    <line x1="80" y1="45" x2="80" y2="115" stroke="#333" stroke-width="1" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                    <text x="85" y="85" font-size="12" font-family="sans-serif" fill="#d32f2f" font-weight="bold" id="svg_a">a</text>
+
+                    <line x1="160" y1="20" x2="160" y2="140" stroke="#333" stroke-width="1" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                    <text x="165" y="85" font-size="12" font-family="sans-serif" fill="#1976d2" font-weight="bold" id="svg_b">b</text>
+
+                    <line x1="35" y1="125" x2="125" y2="125" stroke="#333" stroke-width="1" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                    <text x="65" y="140" font-size="12" font-family="sans-serif" fill="#d32f2f" font-weight="bold" id="svg_c">c</text>
+
+                    <line x1="10" y1="155" x2="150" y2="155" stroke="#333" stroke-width="1" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                    <text x="65" y="170" font-size="12" font-family="sans-serif" fill="#1976d2" font-weight="bold" id="svg_d">d</text>
+
+                    <rect x="230" y="20" width="90" height="15" fill="#fff" stroke="#333" stroke-width="1.5"/>
+                    <rect x="250" y="35" width="50" height="90" fill="#e0e0e0" stroke="#333" stroke-width="1.5"/>
+                    <rect x="230" y="125" width="90" height="15" fill="#fff" stroke="#333" stroke-width="1.5"/>
+
+                    <line x1="330" y1="35" x2="330" y2="125" stroke="#333" stroke-width="1" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                    <text x="335" y="85" font-size="12" font-family="sans-serif" fill="#388e3c" font-weight="bold" id="svg_h">h</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 14: Total Bobbins Wt</h3>
+            <div class="formula">W_all = (2×Flange + 4×Walls) × Limbs</div>
+            <label>Bobbin Mat Thickness (mm)</label>
+            <input type="number" step="any" id="tbobbinMat" value="3" inputmode="decimal">
+            <label>FR4/Glass Density (g/cc)</label>
+            <input type="number" step="any" id="rhoBobbin" value="2.20" inputmode="decimal">
+            <div class="calculation" id="calc14"></div>
+            
+            <div class="calc-wrapper">
+                <label>1× Flange Wt (kg)</label>
+                <input type="number" step="any" id="flangeWtOutput" placeholder="Waiting..." inputmode="decimal" readonly>
+            </div>
+            <div class="calc-wrapper">
+                <label>1× Wall Wt (long/short kg)</label>
+                <input type="text" id="wallWtOutput" placeholder="Waiting..." readonly>
+            </div>
+            <div class="calc-wrapper">
+                <label>Total Bobbins Wt (All Limbs kg)</label>
+                <input type="number" step="any" id="totalBobbinWtOutput" placeholder="Waiting..." inputmode="decimal" data-cost-type="bobbin" data-cost-name="Bobbin">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin: 40px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 10px; text-transform: uppercase;">Phase 5: Secondary Winding</h2>
+    <div class="row">
+
+        <div class="card">
+            <h3>STEP 15: Sec Conductor</h3>
+            <div class="formula">Area = I_sec / δ</div>
+            <label>Insulation Increment (mm)</label>
+            <input type="number" step="any" id="secInsAddition" value="0.01" inputmode="decimal">
+            <div class="calculation" id="calc15"></div>
+            
+            <div class="calc-wrapper">
+                <label>Calculated Bare Dia (mm)</label>
+                <input type="number" step="any" id="secCalcBareDiaOutput" placeholder="Waiting..." readonly style="background:#eee;">
+            </div>
+            <div class="calc-wrapper swg-highlight-wrapper">
+                <label style="color:#d32f2f; text-align:center; font-weight: bold;">Suggested Sec Wire SWG</label>
+                <div id="secSwgSuggest" class="suggest-badge" style="margin-top: 5px;">Waiting...</div>
+            </div>
+            <div class="calc-wrapper">
+                <label>Select Winding SWG</label>
+                <select id="secSwgSelect" style="width:100%; padding: 5px; margin-top: 2px;"></select>
+            </div>
+            <div class="calc-wrapper">
+                <label>Selected Bare Dia (mm)</label>
+                <input type="number" step="any" id="secSelectedBareDia" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Selected Insulated d (mm)</label>
+                <input type="number" step="any" id="secInsDiaInput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+
+            <div id="secFlatWireSection" style="display:none; margin-top: 15px; padding: 10px; border: 1px dashed #2196f3; background:#e3f2fd; border-radius: 6px;">
+                <h4 style="margin-bottom:10px; color:#1976d2; font-size:14px;">Wire Type (Secondary)</h4>
+                
+                <div class="wire-type-group">
+                    <label class="wire-type-card">
+                        <input type="radio" id="secWireTypeRound" name="secWireType" value="round" checked>
+                        <div class="wire-type-info">
+                            <span class="wire-type-title">Round Wire</span>
+                            <span class="wire-type-desc">Recommended for standard winding</span>
+                        </div>
+                    </label>
+                    <label class="wire-type-card">
+                        <input type="radio" id="secWireTypeFlat" name="secWireType" value="flat">
+                        <div class="wire-type-info">
+                            <span class="wire-type-title">Flat (Strip) Wire</span>
+                            <span class="wire-type-desc">Recommended for heavy current conductors</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="secFlatInputs" style="display:none;">
+                    <div style="font-size:12px; color:#555; margin-bottom:10px;">
+                        <strong>Suggested Strip Sizes:</strong> <span id="secStripSuggestions" style="color:#1976d2; font-weight:bold;">--</span>
+                    </div>
+                    <label>Breadth (mm)</label>
+                    <input type="number" step="any" id="secFlatBreadth" placeholder="Enter Breadth" inputmode="decimal">
+                    <label>Height (mm)</label>
+                    <input type="number" step="any" id="secFlatHeight" placeholder="Enter Height" inputmode="decimal">
+                    <label>Parallel Flat Conductors</label>
+                    <input type="number" step="1" min="1" id="secParallel" value="1" inputmode="numeric">
+                    <div class="calc-wrapper">
+                        <label>Entered Area (mm²)</label>
+                        <input type="number" step="any" id="secEnteredAreaOutput" placeholder="Waiting..." readonly style="background:#eee; margin-bottom: 5px;">
+                        <label>Effective Height (mm)</label>
+                        <input type="number" step="any" id="secEffectiveHeightOutput" placeholder="Waiting..." readonly style="background:#eee; margin-bottom: 5px;">
+                        <label>Effective Area (mm²)</label>
+                        <input type="number" step="any" id="secFlatAreaOutput" placeholder="Waiting..." readonly style="background:#eee;">
+                        <div id="secFlatWarning" style="color:#d32f2f; font-size:11px; margin-top:4px; display:none; font-weight:bold;">Warning: Effective Area differs from required!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 16: Sec Layers & Rad</h3>
+            <div class="formula">TPL = FLOOR(Bobbin / d) - Margin</div>
+            <label>Sec Bobbin Height (mm)</label>
+            <input type="number" step="any" id="bobbinHeightSec" placeholder="Enter Height" inputmode="decimal">
+            <label>Safety Margin (Turns)</label>
+            <input type="number" step="any" id="secSafetyMargin" value="1" inputmode="decimal">
+            <label>Paper Layers Count</label>
+            <input type="number" step="any" id="secPaperLayers" value="4" inputmode="decimal">
+            <label>Primary-to-Secondary Gap (mm)</label>
+            <input type="number" step="any" id="priSecGap_step16" value="0" inputmode="decimal">
+            <div class="calculation" id="calc16"></div>
+            
+            <div class="calc-wrapper">
+                <label>Sec Turns/Limb</label>
+                <input type="number" step="any" id="secTurnsLimbOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Secondary TPL</label>
+                <input type="number" step="any" id="secTplOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Sec Layers</label>
+                <input type="number" step="any" id="secLayersOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Sec Radial Thickness (mm)</label>
+                <input type="number" step="any" id="secRadialOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>STEP 17: Sec LMT & Weight</h3>
+            <div class="formula">Split-Bobbin: Matches Pri Inner</div>
+            <div class="calculation" id="calc17"></div>
+            
+            <div class="calc-wrapper">
+                <label>Secondary LMT (m)</label>
+                <input type="number" step="any" id="secLmtOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Secondary Conductor Weight (kg)</label>
+                <input type="number" step="any" id="secWeightOutput" placeholder="Waiting..." inputmode="decimal" data-cost-type="winding" data-cost-name="Secondary" data-cost-material-source="conductorMaterial">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin: 40px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 10px; text-transform: uppercase;">Phase 6: Core Mass Validation</h2>
+    <div class="row">
+        <div class="card">
+            <h3>STEP 18: Core Mass Valid</h3>
+            <div class="formula">Perimeter = 2D + 2L + 2A</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+                <div>
+                    <label>D (Tongue)</label>
+                    <input type="number" step="any" id="coreD" placeholder="e.g. 100">
+                </div>
+                <div>
+                    <label>L (Window L)</label>
+                    <input type="number" step="any" id="coreL" placeholder="Waiting..." inputmode="decimal">
+                </div>
+                <div>
+                    <label>A (Window W)</label>
+                    <input type="number" step="any" id="coreA" placeholder="Waiting..." inputmode="decimal">
+                </div>
+                <div>
+                    <label>ST (Stack)</label>
+                    <input type="number" step="any" id="coreST" placeholder="e.g. 130">
+                </div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:5px;">
+                <div>
+                    <label>Pri-to-Sec Gap (mm)</label>
+                    <input type="number" step="any" id="priSecGap" value="0" inputmode="decimal">
+                </div>
+                <div>
+                    <label>Core-to-Pri Gap (mm)</label>
+                    <input type="number" step="any" id="coreToPriGap" value="1" inputmode="decimal">
+                </div>
+                <div>
+                    <label>Bobbin Gap (mm)</label>
+                    <input type="number" step="any" id="bobbinGap" value="3.5" inputmode="decimal">
+                </div>
+                <div>
+                    <label>Pri-to-Pri Gap (mm)</label>
+                    <input type="number" step="any" id="priPriGap" value="0" inputmode="decimal">
+                </div>
+            </div>
+            
+            <label style="margin-top:10px;">Final Core Stacking Factor</label>
+            <input type="number" step="any" id="finalCoreSf" value="0.98" inputmode="decimal">
+            <label>CRGO Steel Density (g/cc)</label>
+            <input type="number" step="any" id="rhoSteel" value="7.65" inputmode="decimal">
+            <div class="calculation" id="calc18"></div>
+            
+            <div class="calc-wrapper">
+                <label>Frame Perimeter Length (mm)</label>
+                <input type="number" step="any" id="framePerimeterOutput" placeholder="Waiting..." inputmode="decimal">
+                <span class="override-text">Editable Override</span>
+            </div>
+            <div class="calc-wrapper">
+                <label>Total Core Mass (kg)</label>
+                <input type="number" step="any" id="coreMassOutput" placeholder="Waiting..." inputmode="decimal" data-cost-type="core" data-cost-name="Iron Core">
+                <span class="override-text">Editable Override</span>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 style="text-align:center; margin: 40px 0 15px; color:#2196f3; border-bottom: 2px solid #2196f3; padding-bottom: 10px; text-transform: uppercase;">Phase 7: Material Cost Estimation</h2>
+    <div class="row">
+        <div class="card" style="grid-column: span 5; min-height: auto;">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap: 15px;">
+                <div style="flex:1; min-width: 250px;">
+                    <h3>Material Prices</h3>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <label>Copper Price (₹/kg)</label>
+                            <input type="number" step="any" id="priceCu" placeholder="Empty" class="price-input">
+                        </div>
+                        <div>
+                            <label>Aluminium Price (₹/kg)</label>
+                            <input type="number" step="any" id="priceAl" placeholder="Empty" class="price-input">
+                        </div>
+                        <div>
+                            <label>Iron Core Price (₹/kg)</label>
+                            <input type="number" step="any" id="priceFe" placeholder="Empty" class="price-input">
+                        </div>
+                        <div>
+                            <label>Bobbin Price (₹/kg)</label>
+                            <input type="number" step="any" id="priceBobbin" placeholder="Empty" class="price-input">
+                        </div>
+                        <div>
+                            <label>Clamp Price (₹/kg)</label>
+                            <input type="number" step="any" id="priceClamp" placeholder="Empty" class="price-input">
+                        </div>
+                    </div>
+                </div>
+                <div style="flex:2; min-width: 300px;">
+                    <h3>Cost Breakdown</h3>
+                    <div id="costBreakdownTableContainer">
+                        <table class="summary-table cost-table" id="liveCostTable" style="margin-bottom: 10px;">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Material</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Price/kg</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="liveCostBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cost-totals-grid" id="liveCostTotals">
+                    </div>
+                    <div class="grand-total-box" id="liveGrandTotal">
+                        Grand Total: ₹0.00
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Buttons -->
+<div class="fab-container">
+    <button class="fab-btn summary-btn" onclick="openSummary()">Summary</button>
+    <button class="fab-btn print-btn" onclick="window.print()">Print</button>
+    <button class="fab-btn clear-btn" onclick="clearAll()">Clear Data</button>
+</div>
+
+<!-- Summary Modal -->
+<div id="summaryModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Transformer Summary</h2>
+            <span class="close-btn" onclick="closeSummary()">&times;</span>
+        </div>
+        <table class="summary-table">
+            <tbody>
+                <tr><th>Conductor Material</th><td id="sumMaterial">--</td></tr>
+                <tr><th>Primary Voltage</th><td id="sumPriVolts">--</td></tr>
+                <tr><th>Secondary Voltage</th><td id="sumSecVolts">--</td></tr>
+                <tr><th>Total VA</th><td id="sumVA">--</td></tr>
+                <tr><th>Core (Net Area / Tongue × Stack)</th><td id="sumCore">--</td></tr>
+                <tr><th>Primary Winding</th><td id="sumPriDetails">--</td></tr>
+                <tr><th>Secondary Winding</th><td id="sumSecDetails">--</td></tr>
+                <tr><th>Total Core Weight</th><td id="sumCoreWt">--</td></tr>
+                <tr><th>Total Bobbins Weight</th><td id="sumBobbinWt">--</td></tr>
+                <tr><th>Total Clamps Weight</th><td id="sumClampWt">--</td></tr>
+            </tbody>
+        </table>
+        
+        <div id="summaryCostSection" class="summary-cost-section" style="margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px; color: #444; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Material Cost Estimation</h3>
+            <table class="summary-table cost-table" id="summaryCostTable" style="margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Material</th>
+                        <th>Weight (kg)</th>
+                        <th>Price/kg</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryCostBody">
+                </tbody>
+            </table>
+            <div class="cost-totals-grid" id="summaryCostTotals">
+            </div>
+            <div class="grand-total-box" id="summaryGrandTotal" style="margin-top: 10px;">
+                Grand Total: ₹0.00
+            </div>
+        </div>
+        
+        <div class="modal-svg-container">
+            <h3 style="margin-bottom: 15px; color: #444;">Blueprint Dimensions (Scaled)</h3>
+            <svg viewBox="0 0 350 200" style="width: 100%; max-width: 600px; height: auto;">
+                <defs>
+                    <marker id="arrowHeadModal" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                        <polygon points="0 0, 6 3, 0 6" fill="#333" />
+                    </marker>
+                </defs>
+                <rect x="10" y="20" width="140" height="120" fill="#fff" stroke="#333" stroke-width="1.5"/>
+                <rect x="35" y="45" width="90" height="70" fill="#e0e0e0" stroke="#333" stroke-width="1.5"/>
+
+                <circle cx="22" cy="55" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                <circle cx="22" cy="80" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                <circle cx="22" cy="105" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                <circle cx="138" cy="55" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                <circle cx="138" cy="80" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+                <circle cx="138" cy="105" r="3" fill="#fff" stroke="#333" stroke-width="1"/>
+
+                <line x1="80" y1="45" x2="80" y2="115" stroke="#333" stroke-width="1" marker-start="url(#arrowHeadModal)" marker-end="url(#arrowHeadModal)"/>
+                <text x="85" y="85" font-size="12" font-family="sans-serif" fill="#d32f2f" font-weight="bold" id="modal_svg_a">a</text>
+
+                <line x1="160" y1="20" x2="160" y2="140" stroke="#333" stroke-width="1" marker-start="url(#arrowHeadModal)" marker-end="url(#arrowHeadModal)"/>
+                <text x="165" y="85" font-size="12" font-family="sans-serif" fill="#1976d2" font-weight="bold" id="modal_svg_b">b</text>
+
+                <line x1="35" y1="125" x2="125" y2="125" stroke="#333" stroke-width="1" marker-start="url(#arrowHeadModal)" marker-end="url(#arrowHeadModal)"/>
+                <text x="65" y="140" font-size="12" font-family="sans-serif" fill="#d32f2f" font-weight="bold" id="modal_svg_c">c</text>
+
+                <line x1="10" y1="155" x2="150" y2="155" stroke="#333" stroke-width="1" marker-start="url(#arrowHeadModal)" marker-end="url(#arrowHeadModal)"/>
+                <text x="65" y="170" font-size="12" font-family="sans-serif" fill="#1976d2" font-weight="bold" id="modal_svg_d">d</text>
+
+                <rect x="230" y="20" width="90" height="15" fill="#fff" stroke="#333" stroke-width="1.5"/>
+                <rect x="250" y="35" width="50" height="90" fill="#e0e0e0" stroke="#333" stroke-width="1.5"/>
+                <rect x="230" y="125" width="90" height="15" fill="#fff" stroke="#333" stroke-width="1.5"/>
+
+                <line x1="330" y1="35" x2="330" y2="125" stroke="#333" stroke-width="1" marker-start="url(#arrowHeadModal)" marker-end="url(#arrowHeadModal)"/>
+                <text x="335" y="85" font-size="12" font-family="sans-serif" fill="#388e3c" font-weight="bold" id="modal_svg_h">h</text>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<script src="js/swgData.js"></script>
+<script src="js/app.js"></script>
+<script src="js/costModule.js"></script>
+</body>
+</html>

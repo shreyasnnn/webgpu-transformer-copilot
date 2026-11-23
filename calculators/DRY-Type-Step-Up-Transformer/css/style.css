@@ -1,0 +1,478 @@
+/* ==========================================================================
+   1. CORE RESETS & BASE STYLES
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f2f2f2;
+    padding: 10px;
+}
+
+.container {
+    max-width: 1600px;
+    margin: auto;
+    background: white;
+    border: 1px solid #999;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 28px;
+    color: #222;
+}
+
+/* ==========================================================================
+   2. GRID SYSTEM & CARD ARCHITECTURE
+   ========================================================================== */
+.row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.card {
+    border: 1px solid #aaa;
+    padding: 12px;
+    border-radius: 6px;
+    background: #fff;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card h3 {
+    text-align: center;
+    margin-bottom: 12px;
+    color: #333;
+    font-size: 16px;
+}
+
+/* ==========================================================================
+   3. FORMULAS & INTERMEDIATE MATH TRACES
+   ========================================================================== */
+.formula {
+    background: #fff8dc;
+    border: 1px solid #d4b106;
+    padding: 10px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculation {
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+    min-height: 35px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ==========================================================================
+   4. FORM ELEMENTS & EDITABLE OVERRIDE WRAPPERS
+   ========================================================================== */
+label {
+    display: block;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 3px rgba(33, 150, 243, 0.4);
+}
+
+/* The highlighted wrapper box surrounding all editable calculated answers */
+.calc-wrapper {
+    margin-top: 8px;
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.calc-wrapper input {
+    background: #fff;
+    margin-top: 2px;
+}
+
+/* Informative helper micro-text */
+.override-text {
+    font-size: 10px;
+    color: #1e88e5;
+    margin-top: 4px;
+    display: block;
+    font-weight: 600;
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ==========================================================================
+   5. WIRE TYPE CARDS (RADIO BUTTONS)
+   ========================================================================== */
+.wire-type-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.wire-type-card {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+.wire-type-card:hover {
+    border-color: #2196f3;
+}
+.wire-type-card input[type="radio"] {
+    margin: 0;
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
+    accent-color: #2196f3;
+    flex-shrink: 0;
+}
+.wire-type-info {
+    display: flex;
+    flex-direction: column;
+}
+.wire-type-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+.wire-type-desc {
+    font-size: 11px;
+    color: #666;
+    margin-top: 2px;
+}
+
+/* Checked state using :has */
+.wire-type-card:has(input[type="radio"]:checked) {
+    border-color: #2196f3;
+    background-color: #e3f2fd;
+}
+.wire-type-card:has(input[type="radio"]:checked) .wire-type-title {
+    color: #1976d2;
+}
+
+/* ==========================================================================
+   6. FLOATING ACTION BUTTONS & MODAL
+   ========================================================================== */
+.fab-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.fab-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.fab-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+}
+
+.clear-btn { background: #f44336; color: white; }
+.clear-btn:hover { background: #d32f2f; }
+
+.print-btn { background: #607d8b; color: white; }
+.print-btn:hover { background: #455a64; }
+
+.summary-btn { background: #4caf50; color: white; }
+.summary-btn:hover { background: #388e3c; }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #2196f3;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    color: #2196f3;
+    margin: 0;
+}
+
+.close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-btn:hover, .close-btn:focus {
+    color: #d32f2f;
+    text-decoration: none;
+}
+
+/* Summary Table */
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.summary-table th, .summary-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    font-size: 15px;
+}
+
+.summary-table th {
+    background-color: #f5f5f5;
+    color: #333;
+    width: 40%;
+    font-weight: bold;
+}
+
+.summary-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.summary-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.modal-svg-container {
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+/* ==========================================================================
+   6. COST ESTIMATION STYLES
+   ========================================================================== */
+.price-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fdfdfd;
+}
+
+.cost-table {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+.cost-table th {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.cost-totals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.cost-total-item {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+}
+.cost-total-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.cost-total-values {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+.cost-total-values strong {
+    color: #333;
+    font-size: 15px;
+    margin-top: 3px;
+}
+
+.grand-total-box {
+    background: #4caf50;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.grand-total-box span {
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+/* ==========================================================================
+   7. RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1400px) {
+    .row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1100px) {
+    .row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+    body {
+        padding: 5px;
+    }
+    .container {
+        padding: 10px;
+    }
+    h1 {
+        font-size: 22px;
+    }
+    input {
+        font-size: 16px;
+        padding: 12px;
+    }
+    .fab-btn {
+        width: 100%;
+    }
+    .fab-container {
+        left: 20px; /* Make it full width on mobile minus margins */
+        bottom: 10px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .fab-container .fab-btn {
+        flex: 1;
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* ==========================================================================
+   8. PRINT SPECIFICS
+   ========================================================================== */
+@media print {
+    body {
+        background: white;
+    }
+    .fab-container {
+        display: none;
+    }
+    .modal-content {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    .close-btn { display: none; }
+    .container {
+        border: none;
+    }
+    .card {
+        page-break-inside: avoid;
+    }
+}
+
+/* Special formatting to make the SWG recommendation highly visible */
+.swg-highlight-wrapper {
+    background: #fff9c4;
+    border-color: #fbc02d;
+}
+
+.swg-highlight {
+    background: #fff9c4 !important;
+    border: 2px solid #8bc34a !important;
+    color: #d32f2f !important;
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    text-align: center;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
